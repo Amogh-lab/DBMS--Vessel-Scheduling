@@ -1,7 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import pool from "./config/postgres.js";
+
 import vesselRoutes from "./routes/vesselRoutes.js";
+import portRoutes from "./routes/portRoutes.js";
+
 
 dotenv.config();
 
@@ -16,6 +19,7 @@ const testDb = async () => {
 testDb();
 
 app.use("/api/vessels", vesselRoutes);
+app.use("/api/ports", portRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`PostgreSQL service running on port ${process.env.PORT}`);
