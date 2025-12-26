@@ -5,6 +5,7 @@ import pool from "./config/postgres.js";
 import vesselRoutes from "./routes/vesselRoutes.js";
 import portRoutes from "./routes/portRoutes.js";
 import scheduleRoutes from "./routes/scheduleRoutes.js";
+import plantRoutes from "./routes/plantRoutes.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use("/api/vessels", vesselRoutes);
 app.use("/api/ports", portRoutes);
 app.use("/api/schedules", scheduleRoutes);
+app.use("/api/plants", plantRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`PostgreSQL service running on port ${process.env.PORT}`);
