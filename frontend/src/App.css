@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Dropdown styling fix */
+select {
+  background-color: white !important;
+  color: #1f2937 !important;
+}
+
+select option {
+  background-color: white !important;
+  color: #1f2937 !important;
+  padding: 10px !important;
+}
+
+select option:hover {
+  background-color: #f3f4f6 !important;
+}
