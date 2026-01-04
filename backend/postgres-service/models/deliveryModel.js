@@ -25,6 +25,23 @@ export const getAllDeliveries = async () => {
   return result.rows;
 };
 
+export const getDeliveriesByPlant = async (plant_id) => {
+  const query = `
+    SELECT
+      d.delivery_id,
+      d.schedule_id,
+      d.plant_id,
+      d.delivery_eta,
+      d.status,
+      d.created_at
+    FROM delivery d
+    WHERE d.plant_id = $1
+    ORDER BY d.created_at DESC
+  `;
+  const result = await pool.query(query, [plant_id]);
+  return result.rows;
+};
+
 export const createDelivery = async (delivery) => {
   const {
     delivery_id,
@@ -42,7 +59,7 @@ export const createDelivery = async (delivery) => {
       delivery_eta,
       status
     )
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES ($1,$2,$3,$4,$5)
     RETURNING *
   `;
 

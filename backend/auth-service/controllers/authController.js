@@ -139,3 +139,12 @@ export const Login = async (req, res) => {
 export const logout = async (req, res) => {
   res.json({ message: "Logout successful" });
 };
+
+export const getMe = async (req, res) => {
+  res.json({
+    user_id: req.user.user_id,
+    role: req.user.role,
+    vessel_id: req.user.vessel_id || null,
+    plant_id: req.user.plant_id || null
+  });
+};

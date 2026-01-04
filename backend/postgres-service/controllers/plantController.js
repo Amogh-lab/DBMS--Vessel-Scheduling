@@ -1,4 +1,8 @@
-import { getAllPlants, createPlant } from "../models/plantModel.js";
+import {
+  getAllPlants,
+  createPlant,
+  getPlantById
+} from "../models/plantModel.js";
 
 export const fetchAllPlants = async (req, res) => {
   try {
@@ -7,6 +11,22 @@ export const fetchAllPlants = async (req, res) => {
   } catch (error) {
     console.error("Error fetching plants:", error);
     res.status(500).json({ message: "Failed to fetch plants" });
+  }
+};
+
+export const fetchPlantById = async (req, res) => {
+  try {
+    const { plant_id } = req.params;
+    const plant = await getPlantById(plant_id);
+
+    if (!plant) {
+      return res.status(404).json({ message: "Plant not found" });
+    }
+
+    res.status(200).json(plant);
+  } catch (error) {
+    console.error("Error fetching plant:", error);
+    res.status(500).json({ message: "Failed to fetch plant" });
   }
 };
 

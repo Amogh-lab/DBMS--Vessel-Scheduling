@@ -12,7 +12,7 @@ export const getAllPorts = async () => {
             created_at
         FROM port
         ORDER BY created_at DESC
-        `;
+    `;
     const result = await pool.query(query);
     return result.rows; 
 };
@@ -35,10 +35,11 @@ export const createPort = async (port) => {
             current_queue,
             weather_status,
             port_efficiency_rating
-            )
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *
-        `;
+        )
+        VALUES ($1,$2,$3,$4,$5,$6)
+        RETURNING *
+    `;
+
     const values = [
         port_id,
         port_name,
@@ -47,6 +48,7 @@ export const createPort = async (port) => {
         weather_status,
         port_efficiency_rating
     ];
+
     const result = await pool.query(query, values);
     return result.rows[0];
 };

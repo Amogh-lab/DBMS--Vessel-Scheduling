@@ -34,10 +34,8 @@ const { Pool } = pkg;
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URI,
-  ssl: { rejectUnauthorized: false },
-  max: 5,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000
+    ssl: { rejectUnauthorized: false },
+    family: 4
 });
 
 export default pool;

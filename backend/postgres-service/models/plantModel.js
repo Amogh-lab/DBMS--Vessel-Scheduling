@@ -16,6 +16,22 @@ export const getAllPlants = async () => {
   return result.rows;
 };
 
+export const getPlantById = async (plant_id) => {
+  const query = `
+    SELECT
+      plant_id,
+      plant_name,
+      raw_material_demand,
+      inventory_status,
+      priority_level,
+      created_at
+    FROM plant
+    WHERE plant_id = $1
+  `;
+  const result = await pool.query(query, [plant_id]);
+  return result.rows[0];
+};
+
 export const createPlant = async (plant) => {
   const {
     plant_id,

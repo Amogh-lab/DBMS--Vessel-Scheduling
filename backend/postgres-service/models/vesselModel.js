@@ -49,3 +49,21 @@ export const createVessel = async (vessel) => {
     const result = await pool.query(query, values);
     return result.rows[0];
 };
+
+// GET vessel by ID
+export const getVesselById = async (vessel_id) => {
+    const query = `
+        SELECT
+            vessel_id,
+            vessel_name,
+            vessel_type,
+            capacity,
+            current_location,
+            fuel_status,
+            created_at
+        FROM vessel
+        WHERE vessel_id = $1
+    `;
+    const result = await pool.query(query, [vessel_id]);
+    return result.rows[0];
+};
