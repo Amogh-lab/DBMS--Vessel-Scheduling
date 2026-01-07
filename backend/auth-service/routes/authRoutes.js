@@ -10,7 +10,7 @@
 
 // export default router;
 import express from "express";
-import { signup, login, logout, getMe} from "../controllers/authController.js";
+import { Signup, Login, logout, getMe} from "../controllers/authController.js";
 import { verifyJWT } from "../middleware/verifyJWT.js";
 
 const router = express.Router();
