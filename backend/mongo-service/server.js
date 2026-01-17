@@ -22,7 +22,23 @@ app.use("/api/ais", aisRoutes)
 app.use("/api/events", eventRoutes)
 app.use("/api/weather", weatherRoutes)
 
+app.use("/api/predictions", predictionRoutes)
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    service: "MongoDB Service",
+    port: process.env.PORT,
+    timestamp: new Date(),
+    connections: {
+      mongodb: "connected",
+      ml_model: "http://localhost:8000"
+    }
+  });
+});
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`)
+    console.log(`ML Model integration available at /api/predictions`)
 });
 

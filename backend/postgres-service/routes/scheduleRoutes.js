@@ -6,7 +6,8 @@ import {
   fetchAllSchedules,
   fetchSchedulesByVessel,
   fetchSchedulesByPlant,
-  addSchedule
+  addSchedule,
+  generateIntelligentSchedule
 } from "../controllers/scheduleController.js";
 
 const router = express.Router();
@@ -43,6 +44,14 @@ router.get(
   allowRoles("PLANT_MANAGER"),
   allowOwnPlant,
   fetchSchedulesByPlant
+);
+
+// Generate intelligent schedule
+router.get(
+  "/generate",
+  verifyJWT,
+  allowRoles("PORT_AUTHORITY"),
+  generateIntelligentSchedule
 );
 
 export default router;
