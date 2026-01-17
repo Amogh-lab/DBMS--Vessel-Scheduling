@@ -143,8 +143,11 @@
 
 
 
+# ================================================================
+# FILE: model/app.py (COMPLETE VERSION WITH ALL ENDPOINTS)
+# ================================================================
+
 from flask import Flask, jsonify, send_file, request
-from flask_cors import CORS
 import os
 import joblib
 import numpy as np
@@ -160,19 +163,18 @@ import train_eta_model as teta
 import berth_scheduler as bs
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for React frontend
 
 def exists(path):
     return os.path.exists(path)
 
-# ============================================
-# HOME / DOCUMENTATION
-# ============================================
+# ================================================================
+# HOME ENDPOINT
+# ================================================================
 @app.get("/")
 def home():
     return jsonify({
         "message": "Intelligent Vessel Scheduling API",
-        "version": "2.0",
+        "version": "1.0.0",
         "endpoints": {
             "generation": [
                 "/generate/eta",
@@ -182,12 +184,12 @@ def home():
                 "/generate/vessels"
             ],
             "training": ["/train/eta"],
-            "prediction": [
-                "/predict/eta (POST)",
-                "/predict/batch (POST)",
-                "/model/info (GET)"
-            ],
             "scheduling": ["/schedule/berths"],
+            "prediction": [
+                "/predict/eta",
+                "/predict/batch",
+                "/model/info"
+            ],
             "data_download": [
                 "/data/eta",
                 "/data/unloading",
@@ -196,12 +198,13 @@ def home():
                 "/data/vessels",
                 "/data/final_schedule"
             ]
-        }
+        },
+        "status": "online"
     })
 
-# ============================================
+# ================================================================
 # DATA GENERATION ENDPOINTS
-# ============================================
+# ================================================================
 @app.get("/generate/eta")
 def route_generate_eta():
     try:
@@ -242,9 +245,9 @@ def route_generate_vessels():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ============================================
-# MODEL TRAINING ENDPOINTS
-# ============================================
+# ================================================================
+# MODEL TRAINING ENDPOINT
+# ================================================================
 @app.get("/train/eta")
 def route_train_eta():
     try:
@@ -253,9 +256,9 @@ def route_train_eta():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ============================================
-# SCHEDULING ENDPOINTS
-# ============================================
+# ================================================================
+# SCHEDULING ENDPOINT
+# ================================================================
 @app.get("/schedule/berths")
 def route_schedule_berths():
     per_port = request.args.get("per_port", default=5, type=int)
@@ -265,32 +268,14 @@ def route_schedule_berths():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ============================================
-# 🆕 ML PREDICTION ENDPOINTS
-# ============================================
-
+# ================================================================
+# NEW: ETA PREDICTION ENDPOINT (SINGLE VESSEL)
+# ================================================================
 @app.post("/predict/eta")
 def predict_eta():
     """
     Predict ETA for a vessel based on current conditions
-    
-    Expected JSON body:
-    {
-        "features": {
-            "distance_to_port_km": 500,
-            "speed_knots": 15,
-            "avg_speed_last_1hr": 14.5,
-            "acceleration": 0.2,
-            "heading_change": 5,
-            "engine_health": 0.9,
-            "wind_speed_kmph": 20,
-            "wave_height_m": 2,
-            "visibility_km": 8,
-            "weather_severity": 0.3,
-            "current_queue": 5,
-            "berth_capacity": 10
-        }
-    }
+    Expects JSON body with features
     """
     try:
         # Load the trained model
@@ -359,7 +344,7 @@ def predict_eta():
         # Make prediction
         predicted_eta = model.predict(X)[0]
         
-        # Calculate confidence (simplified - using feature importance)
+        # Calculate confidence (simplified)
         try:
             feature_importances = model.feature_importances_
             confidence = min(0.95, max(0.6, np.mean(feature_importances) * 1.5))
@@ -381,25 +366,14 @@ def predict_eta():
             "error": str(e)
         }), 500
 
-
+# ================================================================
+# NEW: BATCH ETA PREDICTION ENDPOINT
+# ================================================================
 @app.post("/predict/batch")
 def predict_batch_eta():
     """
     Predict ETA for multiple vessels at once
-    
-    Expected JSON body:
-    {
-        "vessels": [
-            {
-                "vessel_id": "V001",
-                "features": { ... }
-            },
-            {
-                "vessel_id": "V002",
-                "features": { ... }
-            }
-        ]
-    }
+    Expects JSON body with array of feature sets
     """
     try:
         model_path = "eta_model.pkl"
@@ -440,14 +414,12 @@ def predict_batch_eta():
                 predictions.append({
                     "vessel_id": vessel_id,
                     "predicted_eta_minutes": round(predicted_eta, 2),
-                    "predicted_eta_hours": round(predicted_eta / 60, 2),
-                    "status": "success"
+                    "predicted_eta_hours": round(predicted_eta / 60, 2)
                 })
             except Exception as e:
                 predictions.append({
                     "vessel_id": vessel.get('vessel_id', 'unknown'),
-                    "error": str(e),
-                    "status": "error"
+                    "error": str(e)
                 })
         
         return jsonify({
@@ -462,11 +434,13 @@ def predict_batch_eta():
             "error": str(e)
         }), 500
 
-
+# ================================================================
+# NEW: MODEL INFO ENDPOINT
+# ================================================================
 @app.get("/model/info")
 def model_info():
     """
-    Get information about the trained model including feature importances
+    Get information about the trained model
     """
     try:
         model_path = "eta_model.pkl"
@@ -479,29 +453,20 @@ def model_info():
         model = joblib.load(model_path)
         
         feature_names = [
-            "distance_to_port_km",
-            "speed_knots",
-            "avg_speed_last_1hr",
-            "acceleration",
-            "heading_change",
-            "engine_health",
-            "wind_speed_kmph",
-            "wave_height_m",
-            "visibility_km",
-            "weather_severity",
-            "current_queue",
-            "berth_capacity"
+            "distance_to_port_km", "speed_knots", "avg_speed_last_1hr",
+            "acceleration", "heading_change", "engine_health",
+            "wind_speed_kmph", "wave_height_m", "visibility_km",
+            "weather_severity", "current_queue", "berth_capacity"
         ]
         
         feature_importances = {}
-        if hasattr(model, 'feature_importances_'):
-            for i, name in enumerate(feature_names):
-                feature_importances[name] = round(float(model.feature_importances_[i]), 4)
+        for i, name in enumerate(feature_names):
+            feature_importances[name] = round(float(model.feature_importances_[i]), 4)
         
         return jsonify({
             "status": "ready",
             "model_type": str(type(model).__name__),
-            "n_features": len(feature_importances) if feature_importances else 0,
+            "n_features": len(model.feature_importances_),
             "feature_importances": feature_importances
         })
     except Exception as e:
@@ -510,9 +475,9 @@ def model_info():
             "error": str(e)
         }), 500
 
-# ============================================
+# ================================================================
 # DATA DOWNLOAD ENDPOINTS
-# ============================================
+# ================================================================
 @app.get("/data/eta")
 def route_data_eta():
     path = "eta_dataset_final.csv"
@@ -555,23 +520,37 @@ def route_data_final_schedule():
         return jsonify({"error": "file not found"}), 404
     return send_file(path, mimetype="text/csv")
 
-# ============================================
-# HEALTH CHECK
-# ============================================
+# ================================================================
+# HEALTH CHECK ENDPOINT
+# ================================================================
 @app.get("/health")
 def health_check():
-    """Check if the API and model are healthy"""
-    model_exists = os.path.exists("eta_model.pkl")
-    dataset_exists = os.path.exists("eta_dataset_final.csv")
+    model_status = "trained" if exists("eta_model.pkl") else "not_trained"
+    dataset_status = "exists" if exists("eta_dataset_final.csv") else "missing"
     
     return jsonify({
         "status": "healthy",
         "service": "ML Model API",
         "port": 8000,
-        "model_trained": model_exists,
-        "dataset_available": dataset_exists,
+        "model_status": model_status,
+        "dataset_status": dataset_status,
         "endpoints_available": 20
     })
 
+# ================================================================
+# RUN SERVER
+# ================================================================
 if __name__ == "__main__":
+    print("=" * 60)
+    print(" Starting ML Model API Server")
+    print("=" * 60)
+    print(" Available Endpoints:")
+    print("   - Data Generation: /generate/*")
+    print("   - Model Training: /train/eta")
+    print("   - ETA Prediction: /predict/eta")
+    print("   - Batch Prediction: /predict/batch")
+    print("   - Model Info: /model/info")
+    print("   - Scheduling: /schedule/berths")
+    print("   - Data Download: /data/*")
+    print("=" * 60)
     app.run(host="0.0.0.0", port=8000, debug=True)

@@ -29,11 +29,7 @@ import { allowOwnVessel } from "../middleware/scopeMiddleware.js";
 
 const router = express.Router();
 
-/*
-GET /:vessel_id
-VESSEL_OPERATOR → Read own
-PORT_AUTHORITY → Read all
-*/
+// GET /:vessel_id - Get all AIS logs for vessel
 router.get(
   "/:vessel_id",
   verifyJWT,
@@ -47,12 +43,7 @@ router.get(
   getAISLog
 );
 
-/*
-GET /latest/:vessel_id
-Get latest position for a vessel
-VESSEL_OPERATOR → Read own
-PORT_AUTHORITY → Read all
-*/
+// GET /latest/:vessel_id - Get latest AIS position
 router.get(
   "/latest/:vessel_id",
   verifyJWT,
@@ -66,22 +57,11 @@ router.get(
   getLatestAISPosition
 );
 
-/*
-POST /
-Add new AIS log entry
-VESSEL_OPERATOR → Create own vessel logs
-PORT_AUTHORITY → Create any logs
-*/
+// POST / - Add new AIS log
 router.post(
   "/",
   verifyJWT,
   allowRoles("VESSEL_OPERATOR", "PORT_AUTHORITY"),
-  (req, res, next) => {
-    if (req.user.role === "VESSEL_OPERATOR") {
-      return allowOwnVessel(req, res, next);
-    }
-    next();
-  },
   addAISLog
 );
 
