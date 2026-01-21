@@ -4,6 +4,7 @@ import {
   getSchedulesByVessel,
   getSchedulesByPlant
 } from "../models/scheduleModel.js";
+import axios from "axios";
 
 export const fetchAllSchedules = async (req, res) => {
   try {
@@ -44,5 +45,23 @@ export const addSchedule = async (req, res) => {
   } catch (error) {
     console.error("Error creating schedule:", error);
     res.status(500).json({ message: "Failed to create schedule" });
+  }
+};
+
+export const generateIntelligentSchedule = async (req, res) => {
+  try {
+    const { berths_per_port } = req.query;
+    const berths = berths_per_port ? parseInt(berths_per_port) : 5;
+
+    // Call the model API to generate schedule
+    const modelResponse = await axios.get(`http://localhost:8000/schedule/berths?per_port=${berths}`);
+    const scheduleData = modelResponse.data;
+
+    // Assuming the model returns schedule data that can be inserted into DB
+    // For now, just return the data; in full integration, parse and insert
+    res.status(200).json(scheduleData);
+  } catch (error) {
+    console.error("Error generating intelligent schedule:", error);
+    res.status(500).json({ message: "Failed to generate intelligent schedule" });
   }
 };

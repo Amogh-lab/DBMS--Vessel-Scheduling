@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import pool from "./config/postgres.js";
+import cors from "cors";
 
 import vesselRoutes from "./routes/vesselRoutes.js";
 import portRoutes from "./routes/portRoutes.js";
@@ -11,14 +12,19 @@ import deliveryRoutes from "./routes/deliveryRoutes.js";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // DB test on startup
-// const testDb = async () => {
-//   const res = await pool.query("SELECT NOW()");
-//   console.log("PostgreSQL connected:", res.rows[0]);
-// };
-// testDb();
+const testDb = async () => {
+  try {
+    const res = await pool.query("SELECT NOW()");
+    console.log("PostgreSQL connected:", res.rows[0]);
+  } catch (err) {
+    console.error("PostgreSQL connection failed:", err);
+  }
+};
+testDb();
 
 app.use("/api/vessels", vesselRoutes);
 app.use("/api/ports", portRoutes);

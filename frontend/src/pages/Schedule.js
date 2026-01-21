@@ -1,66 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Plus, Clock, Download } from 'lucide-react';
+import { PostgresAPI } from '../services/api';
 
 const Schedule = () => {
-  const [schedules] = useState([
-    { 
-      id: 1, 
-      vessel: 'Pacific Trader', 
-      port: 'Mumbai Port', 
-      arrival: '2024-12-25 14:30', 
-      departure: '2024-12-26 08:00', 
-      duration: '17.5h',
-      status: 'Scheduled',
-      cargo: 'Steel',
-      priority: 'High'
-    },
-    { 
-      id: 2, 
-      vessel: 'Atlantic Express', 
-      port: 'Chennai Port', 
-      arrival: '2024-12-24 18:00', 
-      departure: '2024-12-25 12:00', 
-      duration: '18h',
-      status: 'In Progress',
-      cargo: 'Containers',
-      priority: 'Medium'
-    },
-    { 
-      id: 3, 
-      vessel: 'Nordic Carrier', 
-      port: 'Vizag Port', 
-      arrival: '2024-12-26 09:15', 
-      departure: '2024-12-27 06:00', 
-      duration: '20.75h',
-      status: 'Delayed',
-      cargo: 'Coal',
-      priority: 'Low'
-    },
-    { 
-      id: 4, 
-      vessel: 'Mediterranean Queen', 
-      port: 'Cochin Port', 
-      arrival: '2024-12-27 10:00', 
-      departure: '2024-12-28 04:00', 
-      duration: '18h',
-      status: 'Scheduled',
-      cargo: 'Oil',
-      priority: 'High'
-    },
-    { 
-      id: 5, 
-      vessel: 'Baltic Star', 
-      port: 'Mumbai Port', 
-      arrival: '2024-12-28 16:30', 
-      departure: '2024-12-29 10:30', 
-      duration: '18h',
-      status: 'Scheduled',
-      cargo: 'Grain',
-      priority: 'Medium'
-    }
-  ]);
+  const [schedules, setSchedules] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [view, setView] = useState('list'); // list or calendar
+
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      try {
+        const response = await PostgresAPI.get('/schedules');
+        setSchedules(response.data);
+      } catch (error) {
+        console.error('Error fetching schedules:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSchedules();
+  }, []);
+
+  const handleGenerateSchedule = async () => {
+    try {
+      const response = await PostgresAPI.get('/schedules/generate');
+      // Assuming the response has the schedule data
+      alert('Intelligent schedule generated successfully!');
+      // Refresh schedules
+      const schedulesResponse = await PostgresAPI.get('/schedules');
+      setSchedules(schedulesResponse.data);
+    } catch (error) {
+      console.error('Error generating schedule:', error);
+      alert('Failed to generate schedule');
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -101,6 +75,13 @@ const Schedule = () => {
             <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
               <Download size={18} />
               <span>Export</span>
+            </button>
+            <button 
+              onClick={handleGenerateSchedule}
+              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              <Plus size={18} />
+              <span>Generate Intelligent Schedule</span>
             </button>
             <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
               <Plus size={18} />
