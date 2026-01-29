@@ -9,10 +9,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.11.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

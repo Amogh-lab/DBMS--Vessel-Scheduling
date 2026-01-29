@@ -1,129 +1,11 @@
-// import React from 'react';
-// import { Ship, Anchor, Calendar, TrendingUp } from 'lucide-react';
-
-// const Dashboard = () => {
-//   const vessels = [
-//     { id: 1, name: 'Pacific Trader', type: 'Cargo', capacity: 50000, eta: '2024-12-25 14:30', status: 'On Route', location: 'Indian Ocean' },
-//     { id: 2, name: 'Atlantic Express', type: 'Container', capacity: 75000, eta: '2024-12-24 18:00', status: 'Scheduled', location: 'Arabian Sea' },
-//     { id: 3, name: 'Nordic Carrier', type: 'Bulk', capacity: 60000, eta: '2024-12-26 09:15', status: 'Delayed', location: 'Bay of Bengal' }
-//   ];
-
-//   const ports = [
-//     { id: 1, name: 'Mumbai Port', berthCapacity: 12, currentQueue: 3, efficiency: 92, weather: 'Clear' },
-//     { id: 2, name: 'Chennai Port', berthCapacity: 10, currentQueue: 5, efficiency: 88, weather: 'Cloudy' },
-//     { id: 3, name: 'Vizag Port', berthCapacity: 8, currentQueue: 2, efficiency: 95, weather: 'Clear' }
-//   ];
-
-//   return (
-//     <div className="space-y-6">
-//       {/* KPI Cards */}
-//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-//         <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500 transform hover:scale-105 transition">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-gray-600 text-sm">Active Vessels</p>
-//               <p className="text-3xl font-bold text-gray-800">24</p>
-//             </div>
-//             <Ship className="w-12 h-12 text-blue-500" />
-//           </div>
-//           <p className="text-green-600 text-sm mt-2">↑ 12% from last week</p>
-//         </div>
-
-//         <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-cyan-500 transform hover:scale-105 transition">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-gray-600 text-sm">Port Efficiency</p>
-//               <p className="text-3xl font-bold text-gray-800">91.7%</p>
-//             </div>
-//             <Anchor className="w-12 h-12 text-cyan-500" />
-//           </div>
-//           <p className="text-green-600 text-sm mt-2">↑ 3.2% improvement</p>
-//         </div>
-
-//         <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-purple-500 transform hover:scale-105 transition">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-gray-600 text-sm">Scheduled Today</p>
-//               <p className="text-3xl font-bold text-gray-800">8</p>
-//             </div>
-//             <Calendar className="w-12 h-12 text-purple-500" />
-//           </div>
-//           <p className="text-gray-600 text-sm mt-2">5 arrivals, 3 departures</p>
-//         </div>
-
-//         <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-500 transform hover:scale-105 transition">
-//           <div className="flex items-center justify-between">
-//             <div>
-//               <p className="text-gray-600 text-sm">Avg Turnaround</p>
-//               <p className="text-3xl font-bold text-gray-800">18.5h</p>
-//             </div>
-//             <TrendingUp className="w-12 h-12 text-orange-500" />
-//           </div>
-//           <p className="text-green-600 text-sm mt-2">↓ 2.3h reduced</p>
-//         </div>
-//       </div>
-
-//       {/* Activity Sections */}
-//       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//         {/* Recent Vessel Activity */}
-//         <div className="bg-white p-6 rounded-xl shadow-lg">
-//           <h3 className="text-xl font-bold text-gray-800 mb-4">Recent Vessel Activity</h3>
-//           <div className="space-y-3">
-//             {vessels.map(vessel => (
-//               <div key={vessel.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-//                 <div className="flex items-center space-x-3">
-//                   <Ship className="w-8 h-8 text-blue-600" />
-//                   <div>
-//                     <p className="font-semibold text-gray-800">{vessel.name}</p>
-//                     <p className="text-sm text-gray-600">{vessel.location}</p>
-//                   </div>
-//                 </div>
-//                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-//                   vessel.status === 'On Route' ? 'bg-blue-100 text-blue-700' :
-//                   vessel.status === 'Scheduled' ? 'bg-green-100 text-green-700' :
-//                   'bg-red-100 text-red-700'
-//                 }`}>
-//                   {vessel.status}
-//                 </span>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Port Status Overview */}
-//         <div className="bg-white p-6 rounded-xl shadow-lg">
-//           <h3 className="text-xl font-bold text-gray-800 mb-4">Port Status Overview</h3>
-//           <div className="space-y-3">
-//             {ports.map(port => (
-//               <div key={port.id} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-//                 <div className="flex items-center justify-between mb-2">
-//                   <p className="font-semibold text-gray-800">{port.name}</p>
-//                   <span className="text-sm text-gray-600">{port.weather}</span>
-//                 </div>
-//                 <div className="flex items-center justify-between text-sm">
-//                   <span className="text-gray-600">Queue: {port.currentQueue}/{port.berthCapacity}</span>
-//                   <span className="text-green-600 font-medium">Efficiency: {port.efficiency}%</span>
-//                 </div>
-//                 <div className="mt-2 bg-gray-200 rounded-full h-2">
-//                   <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: `${port.efficiency}%` }}></div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
 
 
 import React, { useState, useEffect } from 'react';
 import { Ship, Anchor, Package, Calendar, AlertCircle, TrendingUp, RefreshCw, Activity } from 'lucide-react';
-import { API, PostgresAPI } from '../services/api';
+import { API, PostgresAPI } from '../../services/api';
 
 const Dashboard = () => {
+  const userRole = JSON.parse(localStorage.getItem('user'))?.role;
   const [stats, setStats] = useState({
     vessels: 0,
     ports: 0,
@@ -136,55 +18,118 @@ const Dashboard = () => {
   const [upcomingSchedules, setUpcomingSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [vessels, setVessels] = useState([]);
+  const [selectedVesselId, setSelectedVesselId] = useState('');
+  const [showAddEvent, setShowAddEvent] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    event_type: '',
+    description: '',
+    severity: 'Low'
+  });
+
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      
-      // Fetch from PostgreSQL
-      const [vesselsRes, portsRes, plantsRes, schedulesRes] = await Promise.all([
-        PostgresAPI.get('/vessels').catch(() => ({ data: [] })),
-        PostgresAPI.get('/ports').catch(() => ({ data: [] })),
-        PostgresAPI.get('/plants').catch(() => ({ data: [] })),
-        PostgresAPI.get('/schedules').catch(() => ({ data: [] }))
-      ]);
+const handleAddEvent = async () => {
+  if (!newEvent.event_type || !newEvent.description) return;
 
-      // Fetch recent events from MongoDB (if available)
-      // This will need the vessel_id from user context
-      let eventsData = [];
-      try {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.vessel_id) {
-          const eventsRes = await API.get(`/events/${user.vessel_id}`);
-          eventsData = eventsRes.data;
-        }
-      } catch (err) {
-        console.log('Events not available:', err);
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  try {
+    await API.post('/events', {
+      ...newEvent,
+      vessel_id: user.vessel_id   // ✅ EXPLICIT
+    });
+
+    setNewEvent({
+      event_type: '',
+      description: '',
+      severity: 'Low'
+    });
+
+    setShowAddEvent(false);
+    fetchDashboardData();
+  } catch (err) {
+    console.error('Failed to add event:', err.response?.data || err.message);
+    alert(err.response?.data?.message || 'Failed to add event');
+  }
+};
+
+
+ const fetchDashboardData = async () => {
+  try {
+    setLoading(true);
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Fetch base PostgreSQL data
+    const [vesselsRes, portsRes, plantsRes] = await Promise.all([
+      PostgresAPI.get('/vessels').catch(() => ({ data: [] })),
+      PostgresAPI.get('/ports').catch(() => ({ data: [] })),
+      PostgresAPI.get('/plants').catch(() => ({ data: [] })),
+    ]);
+
+    setVessels(vesselsRes.data);
+
+    // ---------- SCHEDULES (ROLE AWARE) ----------
+    let schedulesData = [];
+
+    if (user?.role === 'VESSEL_OPERATOR' && user.vessel_id) {
+      const res = await PostgresAPI.get(`/schedules/vessel/${user.vessel_id}`);
+      schedulesData = res.data;
+    }
+
+    if (user?.role === 'PLANT_MANAGER' && user.plant_id) {
+      const res = await PostgresAPI.get(`/schedules/plant/${user.plant_id}`);
+      schedulesData = res.data;
+    }
+
+    if (user?.role === 'PORT_AUTHORITY') {
+      const res = await PostgresAPI.get('/schedules');
+      schedulesData = res.data;
+    }
+
+    // ---------- EVENTS ----------
+    let eventsData = [];
+
+    try {
+      if (user?.role === 'VESSEL_OPERATOR' && user.vessel_id) {
+        const eventsRes = await API.get(`/events/${user.vessel_id}`);
+        eventsData = eventsRes.data;
       }
 
-      setStats({
-        vessels: vesselsRes.data.length,
-        ports: portsRes.data.length,
-        plants: plantsRes.data.length,
-        schedules: schedulesRes.data.length,
-        activeVessels: vesselsRes.data.filter(v => v.fuel_status >= 50).length,
-        pendingEvents: eventsData.filter(e => !e.resolved).length
-      });
-
-      setRecentEvents(eventsData.slice(0, 5));
-      setUpcomingSchedules(schedulesRes.data.slice(0, 5));
-      setError('');
+      if (user?.role === 'PORT_AUTHORITY' && selectedVesselId) {
+        const eventsRes = await API.get(`/events/${selectedVesselId}`);
+        eventsData = eventsRes.data;
+      }
     } catch (err) {
-      console.error('Error fetching dashboard data:', err);
-      setError('Failed to load some dashboard data');
-    } finally {
-      setLoading(false);
+      console.log('Events not available:', err);
     }
-  };
+
+    // ---------- STATS ----------
+    setStats({
+      vessels: vesselsRes.data.length,
+      ports: portsRes.data.length,
+      plants: plantsRes.data.length,
+      schedules: schedulesData.length, // ✅ FIXED
+      activeVessels: vesselsRes.data.filter(v => v.fuel_status >= 50).length,
+      pendingEvents: eventsData.filter(e => !e.resolved).length
+    });
+
+    setRecentEvents(eventsData.slice(0, 5));
+    setUpcomingSchedules(schedulesData.slice(0, 5)); // ✅ FIXED
+    setError('');
+
+  } catch (err) {
+    console.error('Error fetching dashboard data:', err);
+    setError('Failed to load some dashboard data');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const getSeverityColor = (severity) => {
     switch (severity) {
@@ -195,6 +140,12 @@ const Dashboard = () => {
       default: return 'bg-gray-100 text-gray-700';
     }
   };
+
+  useEffect(() => {
+  if (userRole === 'PORT_AUTHORITY' && selectedVesselId) {
+    fetchDashboardData();
+  }
+}, [selectedVesselId]);
 
   if (loading) {
     return (
@@ -289,10 +240,93 @@ const Dashboard = () => {
         {/* Recent Events */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-800">Recent Events</h3>
+            <h3 className="text-xl font-bold text-gray-800">Events</h3>
+
+          <div className="flex items-center gap-3">
+
+            {userRole === 'PORT_AUTHORITY' && (
+              <select
+                value={selectedVesselId}
+                onChange={(e) => setSelectedVesselId(e.target.value)}
+                className="text-sm border rounded px-2 py-1"
+              >
+                <option value="">Select vessel</option>
+                {vessels.map(v => (
+                  <option key={v.vessel_id} value={v.vessel_id}>
+                    {v.vessel_name} ({v.vessel_id})
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {userRole === 'VESSEL_OPERATOR' && (
+              <button
+                onClick={() => setShowAddEvent(prev => !prev)}
+                className="text-sm text-blue-600 font-medium"
+              >
+                Add Event
+              </button>
+
+            )}
+
             <span className="text-sm text-gray-600">{recentEvents.length} events</span>
           </div>
-          {recentEvents.length === 0 ? (
+
+          </div>
+                    {userRole === 'VESSEL_OPERATOR' && showAddEvent && (
+                    <div className="mb-4 p-4 border border-blue-200 bg-blue-50 rounded-lg space-y-3">
+                      
+                      <input
+                        type="text"
+                        placeholder="Event type (e.g. Engine Issue)"
+                        value={newEvent.event_type}
+                        onChange={(e) => setNewEvent({ ...newEvent, event_type: e.target.value })}
+                        className="w-full px-3 py-2 border rounded text-sm text-gray-600"
+                      />
+
+                      <textarea
+                        placeholder="Description"
+                        value={newEvent.description}
+                        onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                        className="w-full px-3 py-2 border rounded text-sm text-gray-600"
+                        rows={2}
+                      />
+
+
+                      <select
+                        value={newEvent.severity}
+                        onChange={(e) => setNewEvent({ ...newEvent, severity: e.target.value })}
+                        className="px-3 py-2 border rounded text-sm"
+                      >
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </select>
+
+                      <div className="flex gap-3">
+                        <button
+                          onClick={handleAddEvent}
+                          className="px-4 py-2 bg-blue-600 text-white rounded text-sm"
+                        >
+                          Submit
+                        </button>
+
+                        <button
+                          onClick={() => setShowAddEvent(false)}
+                          className="px-4 py-2 text-sm text-gray-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                    {userRole === 'PLANT_MANAGER' ? ( 
+            <p className="text-gray-600 text-center py-8">No access</p>
+          )
+           : recentEvents.length === 0 ? (
+
             <p className="text-gray-600 text-center py-8">No recent events available</p>
           ) : (
             <div className="space-y-3">
@@ -305,6 +339,12 @@ const Dashboard = () => {
                       <p className="text-xs text-gray-500 mt-2">
                         {new Date(event.timestamp).toLocaleString()}
                       </p>
+                      {userRole === 'VESSEL_OPERATOR' && (
+                      <button className="mt-2 text-xs text-blue-600 font-medium">
+                        Change Status
+                      </button>
+                    )}
+
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(event.severity)}`}>
                       {event.severity}
@@ -319,7 +359,7 @@ const Dashboard = () => {
         {/* Upcoming Schedules */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-800">Upcoming Schedules</h3>
+            <h3 className="text-xl font-bold text-gray-800">Schedules</h3>
             <span className="text-sm text-gray-600">{upcomingSchedules.length} scheduled</span>
           </div>
           {upcomingSchedules.length === 0 ? (

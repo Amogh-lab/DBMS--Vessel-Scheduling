@@ -21,8 +21,6 @@ router.post(
 // PORT_AUTHORITY → all vessels
 router.get(
     "/",
-    verifyJWT,
-    allowRoles("PORT_AUTHORITY"),
     fetchAllVessels
 );
 

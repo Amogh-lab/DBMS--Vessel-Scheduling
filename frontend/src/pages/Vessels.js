@@ -92,7 +92,7 @@ const Vessels = () => {
           <div className="flex gap-3">
             <button 
               onClick={fetchVessels}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-gray-600"
             >
               <RefreshCw size={18} />
               <span>Refresh</span>
@@ -219,7 +219,7 @@ const Vessels = () => {
                   required
                   value={newVessel.vessel_id}
                   onChange={(e) => setNewVessel({...newVessel, vessel_id: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., V001"
                 />
               </div>
@@ -230,7 +230,7 @@ const Vessels = () => {
                   required
                   value={newVessel.vessel_name}
                   onChange={(e) => setNewVessel({...newVessel, vessel_name: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., Pacific Trader"
                 />
               </div>
@@ -240,7 +240,7 @@ const Vessels = () => {
                   required
                   value={newVessel.vessel_type}
                   onChange={(e) => setNewVessel({...newVessel, vessel_type: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                 >
                   <option value="">Select type</option>
                   <option value="Cargo">Cargo</option>
@@ -256,7 +256,7 @@ const Vessels = () => {
                   required
                   value={newVessel.capacity}
                   onChange={(e) => setNewVessel({...newVessel, capacity: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., 50000"
                 />
               </div>
@@ -266,27 +266,32 @@ const Vessels = () => {
                   type="text"
                   value={newVessel.current_location}
                   onChange={(e) => setNewVessel({...newVessel, current_location: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., Indian Ocean"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Fuel Status (%)</label>
-                <input
-                  type="number"
-                  value={newVessel.fuel_status}
-                  onChange={(e) => setNewVessel({...newVessel, fuel_status: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="e.g., 85"
-                  min="0"
-                  max="100"
-                />
+              <select
+                value={newVessel.fuel_status}
+                onChange={(e) =>
+                  setNewVessel({ ...newVessel, fuel_status: e.target.value })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-700 bg-white"
+                required
+              >
+                <option value="">Select fuel status</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+
               </div>
               <div className="flex gap-3 mt-6">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-gray-600"
                 >
                   Cancel
                 </button>

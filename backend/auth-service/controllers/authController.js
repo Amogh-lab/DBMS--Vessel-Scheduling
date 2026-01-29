@@ -5,7 +5,7 @@ import { findUserByUsername, createUser } from "../models/userModel.js";
 
 export const signup = async (req, res) => {
   try {
-    const { username, password, role, vessel_id, plant_id } = req.body;
+    const { username, password, role, vessel_id, plant_id, port_id } = req.body;
 
     const exists = await findUserByUsername(username);
     if (exists) {
@@ -20,7 +20,8 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       role,
       vessel_id,
-      plant_id
+      plant_id,
+      port_id
     });
 
     res.status(201).json({ message: "User registered successfully" });
@@ -49,7 +50,8 @@ export const login = async (req, res) => {
         user_id: user.user_id,
         role: user.role,
         vessel_id: user.vessel_id,
-        plant_id: user.plant_id
+        plant_id: user.plant_id,
+        port_id: user.port_id
       },
       process.env.JWT_SECRET,
       { expiresIn: "9886h" }
@@ -62,7 +64,8 @@ export const login = async (req, res) => {
         username: user.username,
         role: user.role,
         vessel_id: user.vessel_id,
-        plant_id: user.plant_id
+        plant_id: user.plant_id,
+        port_id: user.port_id
       }
     });
   } catch (err) {
@@ -80,6 +83,7 @@ export const getMe = async (req, res) => {
     user_id: req.user.user_id,
     role: req.user.role,
     vessel_id: req.user.vessel_id || null,
-    plant_id: req.user.plant_id || null
+    plant_id: req.user.plant_id || null,
+    port_id: req.user.port_id || null
   });
 };

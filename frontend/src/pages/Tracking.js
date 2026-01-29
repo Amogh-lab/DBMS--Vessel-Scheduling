@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Navigation, Clock, RefreshCw, AlertCircle, Ship, Brain, TrendingUp } from 'lucide-react';
 import { API, PostgresAPI } from '../services/api';
+import VesselRouteMap from './VesselRouteMap';
 
 const Tracking = () => {
   const [vessels, setVessels] = useState([]);
@@ -218,34 +219,20 @@ const Tracking = () => {
       )}
 
       {/* Map Placeholder */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg h-96 flex items-center justify-center border-2 border-dashed border-blue-300">
-          <div className="text-center">
-            <MapPin className="w-20 h-20 text-blue-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Interactive Map View</h3>
-            <p className="text-gray-600 mb-4">Live vessel positions and routes with GPS tracking</p>
-            {latestAIS && (
-              <p className="text-sm text-gray-700 mb-4">
-                Current Position: {latestAIS.coordinates?.lat?.toFixed(4)}, {latestAIS.coordinates?.lon?.toFixed(4)}
-              </p>
-            )}
-            <div className="flex gap-4 justify-center text-sm text-gray-600">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span>On Route</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span>At Port</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span>Delayed</span>
-              </div>
-            </div>
-          </div>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">
+            Vessel Route (AIS-based)
+          </h3>
+
+          {aisData.length === 0 ? (
+            <p className="text-gray-600 text-center py-12">
+              No AIS route data available for this vessel.
+            </p>
+          ) : (
+            <VesselRouteMap aisData={aisData} />
+          )}
         </div>
-      </div>
+
 
       {/* AIS History */}
       <div className="bg-white rounded-xl shadow-lg p-6">
