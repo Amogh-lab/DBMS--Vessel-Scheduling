@@ -9,7 +9,7 @@ const router = express.Router();
 router.get(
   "/",
   verifyJWT,
-  allowRoles("PORT_AUTHORITY"),
+  allowRoles("PORT_AUTHORITY", "VESSEL_OPERATOR"),
   fetchAllPorts
 );
 

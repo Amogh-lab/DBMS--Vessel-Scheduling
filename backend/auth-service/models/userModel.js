@@ -38,13 +38,13 @@ export const findUserByUsername = async (username) => {
 };
 
 export const createUser = async (user) => {
-  const { user_id, username, password, role, vessel_id, plant_id } = user;
+  const { user_id, username, password, role, vessel_id, plant_id, port_id } = user;
 
   const result = await pool.query(
-    `INSERT INTO users (user_id, username, password, role, vessel_id, plant_id)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     RETURNING user_id, username, role, vessel_id, plant_id`,
-    [user_id, username, password, role, vessel_id, plant_id]
+    `INSERT INTO users (user_id, username, password, role, vessel_id, plant_id, port_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING user_id, username, role, vessel_id, plant_id, port_id`,
+    [user_id, username, password, role, vessel_id, plant_id, port_id]
   );
 
   return result.rows[0];

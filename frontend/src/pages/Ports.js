@@ -228,7 +228,7 @@ const Ports = () => {
       setError('');
     } catch (err) {
       console.error('Error fetching ports:', err);
-      setError('Failed to load ports. Please check if backend is running.');
+      setError('You have no Access to the Data.');
     } finally {
       setLoading(false);
     }
@@ -236,8 +236,15 @@ const Ports = () => {
 
   const handleAddPort = async (e) => {
     e.preventDefault();
+
     try {
-      await PostgresAPI.post('/ports', newPort);
+      await PostgresAPI.post('/ports', {
+        ...newPort,
+        berth_capacity: Number(newPort.berth_capacity),
+        current_queue: Number(newPort.current_queue),
+        port_efficiency_rating: Number(newPort.port_efficiency_rating)
+      });
+
       setShowAddModal(false);
       setNewPort({
         port_id: '',
@@ -247,17 +254,19 @@ const Ports = () => {
         weather_status: 'Clear',
         port_efficiency_rating: ''
       });
+
       fetchPorts();
       alert('Port added successfully!');
     } catch (err) {
-      console.error('Error adding port:', err);
+      console.error('Error adding port:', err.response?.data || err.message);
       alert('Failed to add port: ' + (err.response?.data?.message || err.message));
     }
   };
 
+
   const getEfficiencyColor = (efficiency) => {
-    if (efficiency >= 90) return 'text-green-600';
-    if (efficiency >= 80) return 'text-yellow-600';
+    if (efficiency >= 9) return 'text-green-600';
+    if (efficiency >= 8) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -293,7 +302,7 @@ const Ports = () => {
           <div className="flex gap-3">
             <button 
               onClick={fetchPorts}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-gray-600  "
             >
               <RefreshCw size={18} />
               <span>Refresh</span>
@@ -366,17 +375,17 @@ const Ports = () => {
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-gray-600">Port Efficiency</span>
                   <span className={`text-sm font-bold ${getEfficiencyColor(port.port_efficiency_rating)}`}>
-                    {port.port_efficiency_rating}%
+                    {port.port_efficiency_rating}
                   </span>
                 </div>
                 <div className="bg-gray-200 rounded-full h-3">
                   <div 
                     className={`h-3 rounded-full transition-all ${
-                      port.port_efficiency_rating >= 90 ? 'bg-green-500' :
-                      port.port_efficiency_rating >= 80 ? 'bg-yellow-500' :
+                      port.port_efficiency_rating >= 9 ? 'bg-green-500' :
+                      port.port_efficiency_rating >= 8 ? 'bg-yellow-500' :
                       'bg-red-500'
                     }`}
-                    style={{ width: `${port.port_efficiency_rating}%` }}
+                    style={{ width: `${port.port_efficiency_rating*10}%` }}
                   ></div>
                 </div>
               </div>
@@ -413,7 +422,7 @@ const Ports = () => {
           <div className="text-center p-4 bg-green-50 rounded-lg">
             <p className="text-gray-600 text-sm">Avg Efficiency</p>
             <p className="text-3xl font-bold text-green-600 mt-1">
-              {ports.length > 0 ? (ports.reduce((acc, p) => acc + p.port_efficiency_rating, 0) / ports.length).toFixed(1) : 0}%
+              {ports.length > 0 ? (ports.reduce((acc, p) => acc + p.port_efficiency_rating*10, 0) / ports.length).toFixed(1) : 0}%
             </p>
           </div>
           <div className="text-center p-4 bg-purple-50 rounded-lg">
@@ -444,7 +453,7 @@ const Ports = () => {
                   required
                   value={newPort.port_id}
                   onChange={(e) => setNewPort({...newPort, port_id: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., P001"
                 />
               </div>
@@ -455,7 +464,7 @@ const Ports = () => {
                   required
                   value={newPort.port_name}
                   onChange={(e) => setNewPort({...newPort, port_name: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., Mumbai Port"
                 />
               </div>
@@ -466,7 +475,7 @@ const Ports = () => {
                   required
                   value={newPort.berth_capacity}
                   onChange={(e) => setNewPort({...newPort, berth_capacity: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., 10"
                 />
               </div>
@@ -477,7 +486,7 @@ const Ports = () => {
                   required
                   value={newPort.current_queue}
                   onChange={(e) => setNewPort({...newPort, current_queue: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., 3"
                 />
               </div>
@@ -494,13 +503,13 @@ const Ports = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Efficiency Rating (%) *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2 text-gray-600">Efficiency Rating (%) *</label>
                 <input
                   type="number"
                   required
                   value={newPort.port_efficiency_rating}
                   onChange={(e) => setNewPort({...newPort, port_efficiency_rating: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-600"
                   placeholder="e.g., 92"
                   min="0"
                   max="100"
@@ -510,7 +519,7 @@ const Ports = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition text-gray-600"
                 >
                   Cancel
                 </button>

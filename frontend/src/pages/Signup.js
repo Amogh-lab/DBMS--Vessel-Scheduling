@@ -1,8 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ship, UserPlus, LogIn, AlertCircle, CheckCircle } from 'lucide-react';
+import { PostgresAPI } from '../services/api';
+
 
 const Signup = ({ setShowSignup }) => {
+  const [vessels, setVessels] = useState([]);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -68,6 +71,20 @@ const Signup = ({ setShowSignup }) => {
       [name]: value
     });
   };
+
+  useEffect(() => {
+  const fetchVessels = async () => {
+    try {
+      const res = await PostgresAPI.get('/vessels');
+      setVessels(res.data);
+    } catch (err) {
+      console.error('Failed to fetch vessels', err);
+    }
+  };
+
+  fetchVessels();
+}, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-900 flex items-center justify-center p-4">
@@ -184,21 +201,29 @@ const Signup = ({ setShowSignup }) => {
               </select>
             </div>
 
-            {formData.role === 'VESSEL_OPERATOR' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Vessel ID</label>
-                <input
-                  type="text"
-                  name="vessel_id"
-                  value={formData.vessel_id}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900"
-                  style={{ color: '#111827' }}
-                  placeholder="e.g., V001"
-                />
-                <p className="text-xs text-gray-500 mt-1">Optional: Enter your vessel ID if applicable</p>
-              </div>
-            )}
+          {formData.role === 'VESSEL_OPERATOR' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Vessel</label>
+              <select
+                name="vessel_id"
+                value={formData.vessel_id}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white text-gray-900"
+                style={{ color: '#111827' }}
+                required
+              >
+                <option value="">Select a vessel</option>
+                {vessels.map(vessel => (
+                  <option key={vessel.vessel_id} value={vessel.vessel_id}>
+                    {vessel.vessel_name} ({vessel.vessel_id})
+                  </option>
+                ))}
+
+              </select>
+              <p className="text-xs text-gray-500 mt-1">Select the vessel you operate</p>
+            </div>
+          )}
+
 
             {formData.role === 'PLANT_MANAGER' && (
               <div>

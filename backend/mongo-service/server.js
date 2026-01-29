@@ -6,6 +6,8 @@ import { connectMongodb } from "./config/mongo.js";
 
 import sensorRoutes from "./routes/sensorRoutes.js";
 import aisRoutes from "./routes/aisRoutes.js";
+console.log("AIS routes loaded");
+
 import eventRoutes from "./routes/eventRoutes.js";
 import weatherRoutes from "./routes/weatherRoutes.js";
 import predictionRoutes from "./routes/predictionRoutes.js";
