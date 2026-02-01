@@ -1,5 +1,7 @@
 import React from 'react';
 import { Ship, Anchor, Calendar, TrendingUp, Package, MapPin, Settings, LogOut, Menu, X } from 'lucide-react';
+import { Brain } from 'lucide-react';
+
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, currentPage, setCurrentPage, handleLogout }) => {
   const menuItems = [
@@ -8,7 +10,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentPage, setCurrentPage, han
     { id: 'ports', icon: Anchor, label: 'Ports' },
     { id: 'schedule', icon: Calendar, label: 'Schedule' },
     { id: 'plants', icon: Package, label: 'Plants' },
-    { id: 'tracking', icon: MapPin, label: 'Tracking' }
+    { id: 'tracking', icon: MapPin, label: 'Tracking' },
+    { id: 'predict', icon: Brain, label: 'Predict ETA' }
+
   ];
 
   return (
