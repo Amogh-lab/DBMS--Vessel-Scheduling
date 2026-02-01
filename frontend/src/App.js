@@ -163,6 +163,7 @@ import Ports from './pages/Ports';
 import Schedule from './pages/Schedule';
 import Plants from './pages/Plants';
 import Tracking from './pages/Tracking';
+import PredictETA from './pages/PredictETA';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import './App.css';
@@ -214,24 +215,27 @@ const App = () => {
   }
 
   // Render Current Page based on selection
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'vessels':
-        return <Vessels />;
-      case 'ports':
-        return <Ports />;
-      case 'schedule':
-        return <Schedule />;
-      case 'plants':
-        return <Plants />;
-      case 'tracking':
-        return <Tracking />;
-      default:
-        return <Dashboard />;
-    }
-  };
+const renderPage = () => {
+  switch (currentPage) {
+    case 'dashboard':
+      return <Dashboard />;
+    case 'vessels':
+      return <Vessels />;
+    case 'ports':
+      return <Ports />;
+    case 'schedule':
+      return <Schedule />;
+    case 'plants':
+      return <Plants />;
+    case 'tracking':
+      return <Tracking />;
+    case 'predict':
+      return <PredictETA />;   // 👈 THIS LINE
+    default:
+      return <Dashboard />;
+  }
+};
+
 
   // Main Application Layout (after authentication)
   return (

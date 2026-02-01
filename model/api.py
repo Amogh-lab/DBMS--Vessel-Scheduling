@@ -152,6 +152,8 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
+from flask_cors import CORS
+
 
 # Import your existing modules
 import generate_actual_eta as gae
@@ -162,7 +164,10 @@ import vessel_movement as vmove
 import train_eta_model as teta
 import berth_scheduler as bs
 
+
 app = Flask(__name__)
+CORS(app)
+
 
 def exists(path):
     return os.path.exists(path)
