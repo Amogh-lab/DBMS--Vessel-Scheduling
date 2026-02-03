@@ -21,17 +21,24 @@
 // }
 
 import ais from "../models/AIS_Log.js";
+import axios from "axios";
 
 // ADD AIS Log
-export const addAISLog = async(req, res) => {
-    try {
-        const log = await ais.create(req.body);
-        res.status(201).json(log);
-    }
-    catch(err) {
-        res.status(500).json({error: err.message});
-    }
+import { predictFromAISInternal } from "./predictionController.js";
+
+export const addAISLog = async (req, res) => {
+  try {
+    const log = await ais.create(req.body);
+
+    // 🔥 direct internal call (correct)
+    predictFromAISInternal(log._id);
+
+    res.status(201).json(log);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
 
 // GET AIS Log by vessel_id
 export const getAISLog = async(req, res) => {
