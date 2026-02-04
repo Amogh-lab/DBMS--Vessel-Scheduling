@@ -37,4 +37,4 @@ Core full-stack functionality implemented.
 Future scope includes optimization algorithms, predictive ETA models, and analytics dashboards.
 
 ---
-This repository prioritizes **realistic system design choices over academic simplifications**.
+
