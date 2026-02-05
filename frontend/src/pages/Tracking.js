@@ -36,32 +36,37 @@ const Tracking = () => {
   };
 
   /* ================= FETCH VESSELS ================= */
-  const fetchVessels = async () => {
-    try {
-      setLoading(true);
-      const response = await PostgresAPI.get("/vessels");
-      setVessels(response.data);
+const fetchVessels = async () => {
+  try {
+    setLoading(true);
+    const response = await PostgresAPI.get("/vessels");
+    setVessels(response.data);
 
-      if (response.data.length > 0) {
-        const vesselId = response.data[0].vessel_id;
+    if (response.data.length === 0) return;
 
-        if (!canAccessVessel(vesselId)) {
-          setError("You do not have access to this vessel");
-          return;
-        }
+    let vesselIdToSelect = null;
 
-        setSelectedVessel(vesselId);
-        fetchPredictionLogs(vesselId);
-      }
-
-      setError("");
-    } catch (err) {
-      console.error("Error fetching vessels:", err);
-      setError("Failed to load vessels. Please check backend.");
-    } finally {
-      setLoading(false);
+    if (user.role === "PORT_AUTHORITY") {
+      vesselIdToSelect = response.data[0].vessel_id;
+    } else if (user.role === "VESSEL_OPERATOR") {
+      vesselIdToSelect = user.vessel_id;
     }
-  };
+
+    if (!vesselIdToSelect) {
+      setError("No vessel assigned to this account");
+      return;
+    }
+
+    setSelectedVessel(vesselIdToSelect);
+    fetchPredictionLogs(vesselIdToSelect);
+    setError("");
+  } catch (err) {
+    console.error("Error fetching vessels:", err);
+    setError("Failed to load vessels.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   /* ================= FETCH PREDICTION LOGS ================= */
   const fetchPredictionLogs = async (vesselId) => {
@@ -78,17 +83,19 @@ const Tracking = () => {
   };
 
   /* ================= VESSEL CHANGE ================= */
-  const handleVesselChange = (vesselId) => {
-    if (!canAccessVessel(vesselId)) {
-      setError("You do not have access to this vessel");
-      setPredictionData([]);
-      return;
-    }
+const handleVesselChange = (vesselId) => {
+  if (user.role === "VESSEL_OPERATOR") return;
 
-    setError("");
-    setSelectedVessel(vesselId);
-    fetchPredictionLogs(vesselId);
-  };
+  if (!canAccessVessel(vesselId)) {
+    setError("You do not have access to this vessel");
+    setPredictionData([]);
+    return;
+  }
+
+  setError("");
+  setSelectedVessel(vesselId);
+  fetchPredictionLogs(vesselId);
+};
 
   /* ================= REFRESH ================= */
   const handleRefresh = () => {
