@@ -121,6 +121,10 @@ const fetchPlants = async () => {
       </div>
     );
   }
+  const criticalPriorityCount = plants.filter(
+  plant => Number(plant.priority_level) === 5
+).length;
+
 
   return (
     <div className="space-y-6">
@@ -185,7 +189,7 @@ const fetchPlants = async () => {
             <div>
               <p className="text-gray-600 text-sm">Critical Priority</p>
               <p className="text-2xl font-bold text-red-600">
-                {plants.filter(p => p.priority_level === 'Critical').length}
+                {criticalPriorityCount}
               </p>
             </div>
           </div>
@@ -219,92 +223,88 @@ const fetchPlants = async () => {
       </div>
 
       {/* Plants Grid */}
-{plants.map(plant => {
-  const priority = priorityMap[plant.priority_level];
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {plants.map(plant => {
+    const priority = priorityMap[plant.priority_level];
+    const inventory =
+      inventoryMap[plant.inventory_status] || inventoryMap.Low;
 
-  const inventory =
-    inventoryMap[plant.inventory_status] || inventoryMap.Low;
+    return (
+      <div
+        key={plant.plant_id}
+        className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition"
+      >
+        {/* Plant Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <h3 className="text-xl font-bold text-gray-800 mb-1">
+              {plant.plant_name}
+            </h3>
+            <p className="text-sm text-gray-600">ID: {plant.plant_id}</p>
+          </div>
 
-  return (
-    <div
-      key={plant.plant_id}
-      className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition"
-    >
-      {/* Plant Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <h3 className="text-xl font-bold text-gray-800 mb-1">
-            {plant.plant_name}
-          </h3>
-          <p className="text-sm text-gray-600">ID: {plant.plant_id}</p>
-        </div>
-
-        <span
-          className={`px-3 py-1 rounded-full text-sm font-medium border ${priority.color}`}
-        >
-          {priority.label}
-        </span>
-      </div>
-
-      {/* Plant Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="text-gray-600 text-xs mb-1">Raw Material Demand</p>
-          <p className="text-lg font-bold text-gray-800">
-            {plant.raw_material_demand?.toLocaleString()} MT
-          </p>
-        </div>
-
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <p className="text-gray-600 text-xs mb-1">Inventory Status</p>
-          <p className="text-lg font-bold text-gray-800">
-            {plant.inventory_status}
-          </p>
-        </div>
-      </div>
-
-      {/* Inventory Bar */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600">Inventory Level</span>
-          <span className={`text-sm font-bold ${inventory.text}`}>
-            {plant.inventory_status}
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium border ${priority.color}`}
+          >
+            {priority.label}
           </span>
         </div>
 
-        <div className="bg-gray-200 rounded-full h-3">
-          <div
-            className={`h-3 rounded-full transition-all ${inventory.color}`}
-            style={{ width: `${inventory.percent}%` }}
-          />
+        {/* Plant Stats */}
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <p className="text-gray-600 text-xs mb-1">Raw Material Demand</p>
+            <p className="text-lg font-bold text-gray-800">
+              {plant.raw_material_demand?.toLocaleString()} MT
+            </p>
+          </div>
+
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <p className="text-gray-600 text-xs mb-1">Inventory Status</p>
+            <p className="text-lg font-bold text-gray-800">
+              {plant.inventory_status}
+            </p>
+          </div>
         </div>
 
-        {(plant.inventory_status === 'Low' ||
-          plant.inventory_status === 'Critical') && (
-          <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
-            <AlertTriangle size={12} />
-            Low inventory – urgent delivery needed
-          </p>
-        )}
-      </div>
+        {/* Inventory Bar */}
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-600">Inventory Level</span>
+            <span className={`text-sm font-bold ${inventory.text}`}>
+              {plant.inventory_status}
+            </span>
+          </div>
 
-      {/* Footer */}
-      <div className="border-t border-gray-200 pt-4 flex gap-2">
-        <button
-          onClick={() => setSelectedPlant(plant)}
-          className="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium"
-        >
-          View Details
-        </button>
+          <div className="bg-gray-200 rounded-full h-3">
+            <div
+              className={`h-3 rounded-full transition-all ${inventory.color}`}
+              style={{ width: `${inventory.percent}%` }}
+            />
+          </div>
 
-        <button className="flex-1 bg-green-50 text-green-600 py-2 rounded-lg hover:bg-green-100 transition text-sm font-medium">
-          Schedule Delivery
-        </button>
+          {(plant.inventory_status === 'Low' ||
+            plant.inventory_status === 'Critical') && (
+            <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <AlertTriangle size={12} />
+              Low inventory – urgent delivery needed
+            </p>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-gray-200 pt-4 flex gap-2">
+          <button
+            onClick={() => setSelectedPlant(plant)}
+            className="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium"
+          >
+            View Details
+          </button>
+        </div>
       </div>
-    </div>
-    
-  );
-})}
+    );
+  })}
+</div>
 
 
       {/* Add Plant Modal */}

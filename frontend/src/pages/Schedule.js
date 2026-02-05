@@ -168,13 +168,13 @@ useEffect(() => {
               <Download size={18} />
               <span>Export</span>
             </button>
-            <button 
+            {/* <button 
               onClick={handleGenerateSchedule}
               className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
             >
               <Plus size={18} />
               <span>Generate Intelligent Schedule</span>
-            </button>
+            </button> */}
             {JSON.parse(localStorage.getItem('user'))?.role === 'PORT_AUTHORITY' && (
               <button
                 onClick={() => setShowAddModal(true)}

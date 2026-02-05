@@ -381,9 +381,9 @@ const handleAddEvent = async () => {
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>📅 ETA: {schedule.planned_eta ? new Date(schedule.planned_eta).toLocaleDateString() : 'N/A'}</span>
+                    <span> ETA: {schedule.planned_eta ? new Date(schedule.planned_eta).toLocaleDateString() : 'N/A'}</span>
                     {schedule.loading_unloading_duration && (
-                      <span>⏱️ Duration: {schedule.loading_unloading_duration}h</span>
+                      <span> Duration: {schedule.loading_unloading_duration}h</span>
                     )}
                   </div>
                 </div>

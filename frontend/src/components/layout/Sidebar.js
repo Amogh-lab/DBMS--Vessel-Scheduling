@@ -45,10 +45,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, currentPage, setCurrentPage, han
       </nav>
 
       <div className="p-4 border-t border-blue-700 space-y-2">
-        <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
+        {/* <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
           <Settings size={20} />
           {sidebarOpen && <span>Settings</span>}
-        </button>
+        </button> */}
         <button onClick={handleLogout} className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-red-700 transition">
           <LogOut size={20} />
           {sidebarOpen && <span>Logout</span>}
